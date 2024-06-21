@@ -184,10 +184,12 @@ public class TelaPOO extends javax.swing.JDialog {
     private void botaoBuscaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoBuscaActionPerformed
         List<String> TitleString = volumeDTO.getArrayTitle();
         listItens.setListData(TitleString.toArray(new String[0]));
-
+        
         String autores = volumeDTO.volume.stream()
         .map(BookDTO::getAuthors)
         .collect(Collectors.joining(", "));
+        String valorBusca = caixaBusca.getText();
+        System.out.println(caixaBusca.getText());
     }//GEN-LAST:event_botaoBuscaActionPerformed
 
     private void listItensMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listItensMouseClicked
