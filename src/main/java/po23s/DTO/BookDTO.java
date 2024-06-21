@@ -51,6 +51,9 @@ public class BookDTO {
     public void setPdfAvailability(boolean pdfAvailability) {
         this.pdfAvailability = pdfAvailability;
     }
+    public boolean getAvaliability() {
+        return pdfAvailability;
+    }
 
     public double getPrice() {
         return price;
