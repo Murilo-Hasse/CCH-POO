@@ -206,25 +206,28 @@ public class TelaPOO extends javax.swing.JDialog {
     private void mostrarErroSemLivroBuscado() {
         JOptionPane.showMessageDialog(null, "Erro: Nenhum livro buscado", "Erro Crítico", JOptionPane.ERROR_MESSAGE);
     }
+    private void mostrarErrosQuantidadeLivrosErrada() {
+        JOptionPane.showMessageDialog(null, "Valor indicado esta fora do devido \nIndique um valor superior a 0 e menor à 41 ", "Erro Crítico", JOptionPane.ERROR_MESSAGE);
+    }
+    
     private void botaoBuscaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoBuscaActionPerformed
 
         String valorBusca = caixaBusca.getText();
         String maxRetorno = caixaMax.getText();
-        if (valorBusca.equals("")) {
+        if (valorBusca.equals("")){
             mostrarErroSemLivroBuscado();
-        } else {
+        } 
+        else if (Integer.parseInt(maxRetorno) > 40 || Integer.parseInt(maxRetorno) < 0 ){
+            mostrarErrosQuantidadeLivrosErrada();
+        }
+        else {
             String jsonString = clienteHttp.buscaDados("https://www.googleapis.com/books/v1/volumes?q=" + valorBusca.replace(' ', '+') + "&maxResults=" + maxRetorno);
             Deserializer deserializer = new Deserializer();
             this.volumeDTO = deserializer.deserialize(jsonString);
             List<String> TitleString = volumeDTO.getArrayTitle();
             listItens.setListData(TitleString.toArray(new String[0]));
 
-            String autores = volumeDTO.volume.stream()
-                    .map(BookDTO::getAuthors)
-                    .collect(Collectors.joining(", "));
-            System.out.println("https://www.googleapis.com/books/v1/volumes?q=" + valorBusca.replace(' ', '+') + "maxResults=" + maxRetorno);
         }
-
     }//GEN-LAST:event_botaoBuscaActionPerformed
 
     private void listItensMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listItensMouseClicked

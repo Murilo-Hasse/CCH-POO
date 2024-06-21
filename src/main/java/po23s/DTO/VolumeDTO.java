@@ -17,12 +17,20 @@ public class VolumeDTO {
         return bookStrings;
     }
     public List<String> getArrayTitle() {
-        List<String> bookStrings = new ArrayList<>();
+        ArrayList<String> bookStrings = new ArrayList<>();
         for (BookDTO bookDTO : volume) {
-            bookStrings.add(bookDTO.getTitle());
+            bookStrings.add(bookDTO.getTitle() + "   Autores: " + bookDTO.getAuthors());
         }
         return bookStrings;
     }
+    public List<String> getArrayAutor() {
+        List<String> bookStrings = new ArrayList<>();
+        for (BookDTO bookDTO : volume) {
+            bookStrings.add(bookDTO.getAuthors());
+        }
+        return bookStrings;
+    }
+    
 
     public BookDTO getVolumeByIndex(int index) {
         return volume.get(index);
