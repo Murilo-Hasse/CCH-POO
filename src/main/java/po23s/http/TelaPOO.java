@@ -73,6 +73,7 @@ public class TelaPOO extends javax.swing.JDialog {
 
         listItens.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         listItens.setToolTipText("");
+        listItens.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         listItens.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 listItensMouseClicked(evt);
@@ -86,17 +87,32 @@ public class TelaPOO extends javax.swing.JDialog {
         jScrollPane1.setViewportView(listItens);
         listItens.getAccessibleContext().setAccessibleName("");
 
+        labelsubTitle.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         labelsubTitle.setText("Sub Titulo:");
+        labelsubTitle.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
+        labelAutor.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         labelAutor.setText("Autor:");
+        labelAutor.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
+        labelPublicadora.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         labelPublicadora.setText("Publicadora:");
+        labelPublicadora.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
+        labelDisponibilidade.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         labelDisponibilidade.setText("Disponibilidade em pdf:");
+        labelDisponibilidade.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
+        labelValor.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         labelValor.setText("Valor:");
+        labelValor.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
+        labelTitle.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         labelTitle.setText("Titulo:");
+        labelTitle.setToolTipText("");
+        labelTitle.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        labelTitle.setName(""); // NOI18N
+        labelTitle.setVerifyInputWhenFocusTarget(false);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -120,14 +136,12 @@ public class TelaPOO extends javax.swing.JDialog {
                         .addComponent(lblConfig))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(38, 38, 38)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(labelDisponibilidade)
+                            .addComponent(labelValor)
                             .addComponent(labelPublicadora)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(labelDisponibilidade)
-                                    .addComponent(labelValor)))
                             .addComponent(labelAutor)
                             .addComponent(labelsubTitle)
                             .addComponent(labelTitle))
@@ -153,7 +167,7 @@ public class TelaPOO extends javax.swing.JDialog {
                 .addGap(37, 37, 37)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(27, 27, 27)
-                .addComponent(labelTitle)
+                .addComponent(labelTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelsubTitle)
@@ -176,7 +190,7 @@ public class TelaPOO extends javax.swing.JDialog {
                     .addComponent(labelretornarValor))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel3)
-                .addContainerGap(47, Short.MAX_VALUE))
+                .addContainerGap(44, Short.MAX_VALUE))
         );
 
         pack();
@@ -199,7 +213,7 @@ public class TelaPOO extends javax.swing.JDialog {
         if (valorBusca.equals("")) {
             mostrarErroSemLivroBuscado();
         } else {
-            String jsonString = clienteHttp.buscaDados("https://www.googleapis.com/books/v1/volumes?q=" + valorBusca.replace(' ', '+') + "maxResults=" + maxRetorno);
+            String jsonString = clienteHttp.buscaDados("https://www.googleapis.com/books/v1/volumes?q=" + valorBusca.replace(' ', '+') + "&maxResults=" + maxRetorno);
             Deserializer deserializer = new Deserializer();
             this.volumeDTO = deserializer.deserialize(jsonString);
             List<String> TitleString = volumeDTO.getArrayTitle();
@@ -208,7 +222,7 @@ public class TelaPOO extends javax.swing.JDialog {
             String autores = volumeDTO.volume.stream()
                     .map(BookDTO::getAuthors)
                     .collect(Collectors.joining(", "));
-            System.out.println(maxRetorno);
+            System.out.println("https://www.googleapis.com/books/v1/volumes?q=" + valorBusca.replace(' ', '+') + "maxResults=" + maxRetorno);
         }
 
     }//GEN-LAST:event_botaoBuscaActionPerformed
@@ -223,7 +237,7 @@ public class TelaPOO extends javax.swing.JDialog {
             if (selectedIndex != -1) {
                 BookDTO selectedBook = volumeDTO.getVolumeByIndex(selectedIndex);
                 labelTitle.setText("Titulo: " + selectedBook.getTitle());
-                labelsubTitle.setText("Titulo: " + selectedBook.getsubTitle());
+                labelsubTitle.setText("Sub Titulo: " + selectedBook.getsubTitle());
                 labelAutor.setText("Autor: " + selectedBook.getAuthors());
                 labelPublicadora.setText("Publicadora: " + selectedBook.getPublisher());
                 labelDisponibilidade.setText("Disponibilidade em PDF: " + (selectedBook.getAvaliability() ? "sim" : "não"));
