@@ -1,5 +1,6 @@
 package po23s.DTO;
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -15,7 +16,7 @@ public class BookDTO {
     private boolean pdfAvailability;
 
     @JsonProperty("price")
-    private BigDecimal price;
+    private double price;
 
     // Getters e Setters
 
@@ -51,11 +52,11 @@ public class BookDTO {
         this.pdfAvailability = pdfAvailability;
     }
 
-    public BigDecimal getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(BigDecimal price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
