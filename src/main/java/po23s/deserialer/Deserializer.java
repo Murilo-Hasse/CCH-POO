@@ -7,10 +7,13 @@ import po23s.DTO.VolumeDTO;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
+import javax.swing.JOptionPane;
 
 
 public class Deserializer {
-
+    private void mostrarErroSemLivroBuscado() {
+        JOptionPane.showMessageDialog(null, "Erro: Nenhum livro buscado", "Erro Crítico", JOptionPane.ERROR_MESSAGE);
+    }
     public VolumeDTO deserialize(String jsonString) {
         ObjectMapper objectMapper = new ObjectMapper();
         VolumeDTO volumes = new VolumeDTO();
@@ -52,7 +55,7 @@ public class Deserializer {
                     volumes.add(bookInfo);
                 }
             } else {
-                System.out.println("No books found.");
+                mostrarErroSemLivroBuscado();
             }
     }catch (Exception e){
             e.printStackTrace();
