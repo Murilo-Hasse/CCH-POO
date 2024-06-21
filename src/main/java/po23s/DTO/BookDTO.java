@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BookDTO {
     private String title;
+    private String subtitle;
     private String authors;
     private String publisher;
 
@@ -26,6 +27,13 @@ public class BookDTO {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+    public String getsubTitle() {
+        return subtitle;
+    }
+
+    public void setsubTitle(String subtitle) {
+        this.subtitle = subtitle;
     }
 
     public String getAuthors() {
@@ -67,7 +75,8 @@ public class BookDTO {
     public String toString() {
         return "BookInfo{" +
                 "title='" + title + '\'' +
-                ", authors='" + authors + '\'' +
+                ", subtitle" + subtitle + '\'' +
+                "authors='" + authors + '\'' +
                 ", publisher='" + publisher + '\'' +
                 ", pdfAvailability=" + pdfAvailability +
                 ", price=" + price +

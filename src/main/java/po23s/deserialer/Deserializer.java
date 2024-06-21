@@ -9,11 +9,8 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 import javax.swing.JOptionPane;
 
-
 public class Deserializer {
-    private void mostrarErroSemLivroBuscado() {
-        JOptionPane.showMessageDialog(null, "Erro: Nenhum livro buscado", "Erro Crítico", JOptionPane.ERROR_MESSAGE);
-    }
+
     public VolumeDTO deserialize(String jsonString) {
         ObjectMapper objectMapper = new ObjectMapper();
         VolumeDTO volumes = new VolumeDTO();
@@ -30,7 +27,7 @@ public class Deserializer {
                     BookDTO bookInfo = new BookDTO();
 
                     bookInfo.setTitle(volumeInfo.path("title").asText());
-
+                    bookInfo.setsubTitle(volumeInfo.path("subtitle").asText());
                     if (volumeInfo.has("authors")) {
                         String[] authorsArray = objectMapper.convertValue(volumeInfo.path("authors"), String[].class);
                         bookInfo.setAuthors(Arrays.stream(authorsArray).collect(Collectors.joining(", ")));
@@ -55,12 +52,10 @@ public class Deserializer {
                     volumes.add(bookInfo);
                 }
             } else {
-                mostrarErroSemLivroBuscado();
             }
-    }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return volumes;
     }
 }
-

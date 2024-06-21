@@ -8,13 +8,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 import po23s.DTO.BookDTO;
 import po23s.deserialer.Deserializer;
+import javax.swing.JOptionPane;
 
 public class TelaPOO extends javax.swing.JDialog {
 
     private VolumeDTO volumeDTO;
     ClienteHttp clienteHttp = new ClienteHttp();
 
-    public TelaPOO(Frame parent, boolean modal ) {
+    public TelaPOO(Frame parent, boolean modal) {
         super(parent, modal);
 
         initComponents();
@@ -31,7 +32,7 @@ public class TelaPOO extends javax.swing.JDialog {
         lblConfig = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         listItens = new javax.swing.JList<>();
-        labelTitulo = new javax.swing.JLabel();
+        labelsubTitle = new javax.swing.JLabel();
         labelAutor = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         labelPublicadora = new javax.swing.JLabel();
@@ -42,6 +43,7 @@ public class TelaPOO extends javax.swing.JDialog {
         labelretornarPDF = new javax.swing.JLabel();
         labelretornarPublicadora = new javax.swing.JLabel();
         labelretornarValor = new javax.swing.JLabel();
+        labelTitle = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -84,7 +86,7 @@ public class TelaPOO extends javax.swing.JDialog {
         jScrollPane1.setViewportView(listItens);
         listItens.getAccessibleContext().setAccessibleName("");
 
-        labelTitulo.setText("Titulo:");
+        labelsubTitle.setText("Sub Titulo:");
 
         labelAutor.setText("Autor:");
 
@@ -93,6 +95,8 @@ public class TelaPOO extends javax.swing.JDialog {
         labelDisponibilidade.setText("Disponibilidade em pdf:");
 
         labelValor.setText("Valor:");
+
+        labelTitle.setText("Titulo:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -125,7 +129,8 @@ public class TelaPOO extends javax.swing.JDialog {
                                     .addComponent(labelDisponibilidade)
                                     .addComponent(labelValor)))
                             .addComponent(labelAutor)
-                            .addComponent(labelTitulo))
+                            .addComponent(labelsubTitle)
+                            .addComponent(labelTitle))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(labelretornarTitulo)
@@ -147,9 +152,11 @@ public class TelaPOO extends javax.swing.JDialog {
                     .addComponent(lblConfig))
                 .addGap(37, 37, 37)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(49, 49, 49)
+                .addGap(27, 27, 27)
+                .addComponent(labelTitle)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(labelTitulo)
+                    .addComponent(labelsubTitle)
                     .addComponent(labelretornarTitulo))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -182,22 +189,28 @@ public class TelaPOO extends javax.swing.JDialog {
     private void caixaBuscaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_caixaBuscaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_caixaBuscaActionPerformed
-
+    private void mostrarErroSemLivroBuscado() {
+        JOptionPane.showMessageDialog(null, "Erro: Nenhum livro buscado", "Erro Crítico", JOptionPane.ERROR_MESSAGE);
+    }
     private void botaoBuscaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoBuscaActionPerformed
 
         String valorBusca = caixaBusca.getText();
+        String maxRetorno = caixaMax.getText();
+        if (valorBusca.equals("")) {
+            mostrarErroSemLivroBuscado();
+        } else {
+            String jsonString = clienteHttp.buscaDados("https://www.googleapis.com/books/v1/volumes?q=" + valorBusca.replace(' ', '+') + "maxResults=" + maxRetorno);
+            Deserializer deserializer = new Deserializer();
+            this.volumeDTO = deserializer.deserialize(jsonString);
+            List<String> TitleString = volumeDTO.getArrayTitle();
+            listItens.setListData(TitleString.toArray(new String[0]));
 
-        String jsonString = clienteHttp.buscaDados("https://www.googleapis.com/books/v1/volumes?q=" + valorBusca.replace(' ', '+'));
-        Deserializer deserializer = new Deserializer();
-        this.volumeDTO = deserializer.deserialize(jsonString);
-        List<String> TitleString = volumeDTO.getArrayTitle();
-        listItens.setListData(TitleString.toArray(new String[0]));
+            String autores = volumeDTO.volume.stream()
+                    .map(BookDTO::getAuthors)
+                    .collect(Collectors.joining(", "));
+            System.out.println(maxRetorno);
+        }
 
-        String autores = volumeDTO.volume.stream()
-                .map(BookDTO::getAuthors)
-                .collect(Collectors.joining(", "));
-
-        System.out.println(caixaBusca.getText());
     }//GEN-LAST:event_botaoBuscaActionPerformed
 
     private void listItensMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listItensMouseClicked
@@ -205,15 +218,16 @@ public class TelaPOO extends javax.swing.JDialog {
     }//GEN-LAST:event_listItensMouseClicked
 
     private void listItensValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listItensValueChanged
-    if(!evt.getValueIsAdjusting()){
-        int selectedIndex = listItens.getSelectedIndex();
-        if(selectedIndex != -1){
-            BookDTO selectedBook = volumeDTO.getVolumeByIndex(selectedIndex);
-            labelTitulo.setText("Titulo: " + selectedBook.getTitle()) ;
-            labelAutor.setText("Autor: " + selectedBook.getAuthors());
-            labelPublicadora.setText("Publicadora: "+ selectedBook.getPublisher());
-            labelDisponibilidade.setText("Disponibilidade em PDF: " + (selectedBook.getAvaliability() ? "sim" : "não"));
-            labelValor.setText("Valor: " + selectedBook.getPrice());
+        if (!evt.getValueIsAdjusting()) {
+            int selectedIndex = listItens.getSelectedIndex();
+            if (selectedIndex != -1) {
+                BookDTO selectedBook = volumeDTO.getVolumeByIndex(selectedIndex);
+                labelTitle.setText("Titulo: " + selectedBook.getTitle());
+                labelsubTitle.setText("Titulo: " + selectedBook.getsubTitle());
+                labelAutor.setText("Autor: " + selectedBook.getAuthors());
+                labelPublicadora.setText("Publicadora: " + selectedBook.getPublisher());
+                labelDisponibilidade.setText("Disponibilidade em PDF: " + (selectedBook.getAvaliability() ? "sim" : "não"));
+                labelValor.setText("Valor: " + selectedBook.getPrice());
             }
         }
     }//GEN-LAST:event_listItensValueChanged
@@ -222,10 +236,9 @@ public class TelaPOO extends javax.swing.JDialog {
         listItens.setListData(bookStrings.toArray(new String[0]));
 
         String autores = volumeDTO.volume.stream()
-        .map(BookDTO::getAuthors)
-        .collect(Collectors.joining(", "));
+                .map(BookDTO::getAuthors)
+                .collect(Collectors.joining(", "));
     }
-
 
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -249,7 +262,7 @@ public class TelaPOO extends javax.swing.JDialog {
                 book2.setPrice(39.99);
                 volumeDTO.add(book2);
 
-                TelaPOO dialog = new TelaPOO(new javax.swing.JFrame(), true );
+                TelaPOO dialog = new TelaPOO(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -269,13 +282,14 @@ public class TelaPOO extends javax.swing.JDialog {
     private javax.swing.JLabel labelAutor;
     private javax.swing.JLabel labelDisponibilidade;
     private javax.swing.JLabel labelPublicadora;
-    private javax.swing.JLabel labelTitulo;
+    private javax.swing.JLabel labelTitle;
     private javax.swing.JLabel labelValor;
     private javax.swing.JLabel labelretornarAutores;
     private javax.swing.JLabel labelretornarPDF;
     private javax.swing.JLabel labelretornarPublicadora;
     private javax.swing.JLabel labelretornarTitulo;
     private javax.swing.JLabel labelretornarValor;
+    private javax.swing.JLabel labelsubTitle;
     private javax.swing.JLabel lblConfig;
     private javax.swing.JLabel lblMax;
     private javax.swing.JList<String> listItens;
