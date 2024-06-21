@@ -1,6 +1,5 @@
 package po23s.DTO;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -25,7 +24,8 @@ public class VolumeDTO {
         return bookStrings;
     }
 
-    public Object getVolume() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public BookDTO getVolumeByIndex(int index) {
+        return volume.get(index);
+       // throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

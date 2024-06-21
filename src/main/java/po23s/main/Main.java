@@ -5,9 +5,13 @@ import po23s.deserialer.Deserializer;
 import po23s.http.ClienteHttp;
 import po23s.http.TelaPOO;
 
+import java.util.Scanner;
+
 public class Main {
 
     public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
         ClienteHttp clienteHttp = new ClienteHttp();
         String jsonString = clienteHttp.buscaDados("https://www.googleapis.com/books/v1/volumes?q=java");
         Deserializer deserializer = new Deserializer();

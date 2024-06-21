@@ -198,11 +198,11 @@ public class TelaPOO extends javax.swing.JDialog {
     if(!evt.getValueIsAdjusting()){
         int selectedIndex = listItens.getSelectedIndex();
         if(selectedIndex != -1){
-            BookDTO selectedBook = volumeDTO.getVolume().get(selectedIndex);
+            BookDTO selectedBook = volumeDTO.getVolumeByIndex(selectedIndex);
             labelTitulo.setText("Titulo: " + selectedBook.getTitle()) ;
             labelAutor.setText("Autor: " + selectedBook.getAuthors());
             labelPublicadora.setText("Publicadora: "+ selectedBook.getPublisher());
-            labelDisponibilidade.setText("Disponibilidade em PDF: " + selectedBook.getAvaliability());
+            labelDisponibilidade.setText("Disponibilidade em PDF: " + (selectedBook.getAvaliability() ? "sim" : "não"));
             labelValor.setText("Valor: " + selectedBook.getPrice());
             }
         }
