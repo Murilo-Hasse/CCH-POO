@@ -7,14 +7,16 @@ import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.stream.Collectors;
 import po23s.DTO.BookDTO;
+import po23s.deserialer.Deserializer;
 
 public class TelaPOO extends javax.swing.JDialog {
 
     private VolumeDTO volumeDTO;
+    ClienteHttp clienteHttp = new ClienteHttp();
 
-    public TelaPOO(Frame parent, boolean modal, VolumeDTO volumeDTO) {
+    public TelaPOO(Frame parent, boolean modal ) {
         super(parent, modal);
-        this.volumeDTO = volumeDTO;
+
         initComponents();
     }
 
@@ -182,13 +184,19 @@ public class TelaPOO extends javax.swing.JDialog {
     }//GEN-LAST:event_caixaBuscaActionPerformed
 
     private void botaoBuscaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoBuscaActionPerformed
+
+        String valorBusca = caixaBusca.getText();
+
+        String jsonString = clienteHttp.buscaDados("https://www.googleapis.com/books/v1/volumes?q=" + valorBusca.replace(' ', '+'));
+        Deserializer deserializer = new Deserializer();
+        this.volumeDTO = deserializer.deserialize(jsonString);
         List<String> TitleString = volumeDTO.getArrayTitle();
         listItens.setListData(TitleString.toArray(new String[0]));
-        
+
         String autores = volumeDTO.volume.stream()
-        .map(BookDTO::getAuthors)
-        .collect(Collectors.joining(", "));
-        String valorBusca = caixaBusca.getText();
+                .map(BookDTO::getAuthors)
+                .collect(Collectors.joining(", "));
+
         System.out.println(caixaBusca.getText());
     }//GEN-LAST:event_botaoBuscaActionPerformed
 
@@ -241,7 +249,7 @@ public class TelaPOO extends javax.swing.JDialog {
                 book2.setPrice(39.99);
                 volumeDTO.add(book2);
 
-                TelaPOO dialog = new TelaPOO(new javax.swing.JFrame(), true, volumeDTO);
+                TelaPOO dialog = new TelaPOO(new javax.swing.JFrame(), true );
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
